@@ -2,7 +2,7 @@
 
 /*
 Plugin Name: Index.co plugin
-Plugin URI: http://index.co/integrations
+Plugin URI: http://index.co/integrations/wordpress
 Description: The Index.co plugin for Wordpress
 Version: 1.1
 Author: Otto, Edzo & Laura from Index.co
