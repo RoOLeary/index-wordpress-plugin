@@ -2,7 +2,7 @@
 
 This plugin adds Index info on tech companies to your Wordpress content
 
-![showcase](https://github.com/eblaauw/index/blob/master/example.png "How it works")
+![showcase](https://github.com/thenextweb/index-wordpress-plugin/blob/master/example.png "How it works")
 
 ## Installation
 
