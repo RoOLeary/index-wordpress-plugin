@@ -1,7 +1,6 @@
 <?php
 
 add_action('post_submitbox_misc_actions', 'article_or_box');
-add_action('save_post', 'save_article_or_box');
 function article_or_box()
 {
     global $post;
