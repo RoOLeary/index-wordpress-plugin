@@ -11,7 +11,7 @@ function indexco_add($content) {
         $positions = get_post_meta($post_id, 'indexco_positions');
         if ($positions == null) {
             indexco_add_icon($post_id);
-        } else {
+        } else if( isset($positions[0]) && !empty($positions[0]) ) {
             foreach ($positions[0] as $position) {
                 $haystack = $content;
                 $needle = $position['original'];
