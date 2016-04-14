@@ -3,7 +3,7 @@
 
     var prefix = 'idc-';
     var cardPrefix = prefix+'card-';
-    var version = '0.0.1';
+    var version = '0.0.2';
     var endpoint = 'https://index.co/api/';
 
 
@@ -102,19 +102,16 @@
     	var $headerTags = $('<ul></ul>').attr({
         	'class': cardPrefix+'header-tags'
     	})
-    	if(data.info.market) $headerTags.append($('<li></li>').text(data.info.market));
     	if(data.info.country) $headerTags.append($('<li></li>').text(data.info.country));
-    	if(data.info.twitter) $headerTags.append($('<li></li>').text(data.info.twitter));
     	$header.append($headerTags);
     	
     	var $facts = $('<div></div>').addClass(cardPrefix+'facts');
     	var $factsTags = $('<ul></ul>').attr({
         	'class': cardPrefix+'facts-tags'
     	});
-    	if(data.info.acquisition) $factsTags.append($('<li></li>').text(data.info.acquisition));
-    	if(data.info.founded) $factsTags.append($('<li></li>').text(data.info.founded));
-    	if(data.info.raised) $factsTags.append($('<li></li>').text(data.info.raised));
-    	if(data.info.employees) $factsTags.append($('<li></li>').text(data.info.employees));
+    	if(data.info.founded) $factsTags.append($('<li></li>').text('Founded in ' + data.info.founded));
+    	if(data.info.raised) $factsTags.append($('<li></li>').text('Raised ' + data.info.raised));
+    	if(data.info.employees) $factsTags.append($('<li></li>').text(data.info.employees + ' employees'));
     	$facts.append($factsTags);
     	
     	var $footer = $('<div></div>').addClass(cardPrefix+'footer').html('<p>Click the icon below to view profile</p>');

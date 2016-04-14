@@ -4,7 +4,7 @@
 Plugin Name: Index.co plugin
 Plugin URI: http://index.co/integrations/wordpress
 Description: The Index.co plugin for Wordpress
-Version: 1.1
+Version: 1.2
 Author: Otto, Edzo & Laura from Index.co
 */
 include 'functions/index-server.php';
@@ -15,6 +15,6 @@ include 'filter/filter.php';
 include 'filter/shortcode.php';
 
 add_action( 'wp_enqueue_scripts', function(){
-    wp_enqueue_script('index', plugins_url('assets/index.js', __FILE__), ['jquery']);
+    wp_enqueue_script('index', plugins_url('assets/indexco.js', __FILE__), ['jquery']);
     wp_enqueue_style('index',plugins_url('assets/index.css', __FILE__));
 });
