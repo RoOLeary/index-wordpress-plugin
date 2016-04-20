@@ -102,6 +102,7 @@
     	var $headerTags = $('<ul></ul>').attr({
         	'class': cardPrefix+'header-tags'
     	})
+        if(data.info.market) $headerTags.append($('<li></li>').text(data.info.market));
     	if(data.info.country) $headerTags.append($('<li></li>').text(data.info.country));
     	$header.append($headerTags);
     	
