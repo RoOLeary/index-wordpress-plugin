@@ -86,11 +86,16 @@
 
 
 
-	var makeHoverCardHtml = function(data) {
+	var makeCardHtml = function(data,params) {
 		if(!data || !data.profile || !data.info) {
 			throw 'BAD_STRUCTURE';
 		}
-		var $header = $('<div></div>').addClass(cardPrefix+'header');
+		if(!params) {
+			var params = {};
+		}
+		var $header = $('<a></a>')
+		$header.addClass(cardPrefix+'header');
+		$header.attr('href',data.profile.index_url)
 		$header.append($('<img></img>').attr({
 			'src': data.profile.avatar,
 			'class': cardPrefix+'header-avatar'
@@ -115,10 +120,78 @@
 		if(data.info.employees) $factsTags.append($('<li></li>').text(data.info.employees + ' employees'));
 		$facts.append($factsTags);
 
-		var $footer = $('<div></div>').addClass(cardPrefix+'footer').html('<p>Click the icon below to view profile</p>');
+		var $footer = $('<a></a>');
+		$footer.addClass(cardPrefix+'footer');
+		$footer.attr('href',data.profile.index_url);
 
+		if(params.actionable){
+			$footer.html('<p>View this company on index</p>');
+		}
+		else {
+			$footer.html('<p>Click the icon below to view profile</p>');
+		}
 		var $card = $('<div></div>').addClass(prefix+'card').append($header).append($facts).append($footer);
+
+		if(params.actionable){
+			$card.addClass(prefix+'card--actionable');
+		}
 		return $card;
+	}
+
+
+
+	var parseElement = function($element) {
+
+		var parser = document.createElement('a');
+		parser.href = $element.attr('href');
+
+		return {
+			company: parser.pathname.split('/')[2],
+			href: parser.href
+		};
+
+	}
+
+
+
+	var requestCardData = function(company) {
+
+		var url = endpoint+'company/'+company+'?version='+version;
+		var rq = $.ajax({
+			dataType: "json",
+			type: 'GET',
+			url: url
+		});
+
+		rq.fail(function(xhr,error){
+			if(error !== 'abort'){
+				console.error('[index hovercards] http error ('+error+') loading hovercard for "'+company+'" at endpoint "'+url+'"');
+			}
+		})
+
+		return rq;
+
+	}
+
+
+
+	var attachCard = function($element) {
+
+		var parsedElement = parseElement($element);
+		var company = parsedElement.company;
+		var rq = requestCardData(parsedElement.company);
+
+		var $card = $('<div></div>').addClass(prefix+'cardStandalone')
+		$element.replaceWith($card)
+
+		rq.done(function(data){
+			try {
+				$card.append(makeCardHtml(data,{actionable:true}));
+			} catch(error){
+				console.error('[index hovercards] parsing error ('+error+') loading hovercard for "'+company+'" at endpoint "'+url+'"');
+			}
+		})
+
 	}
 
 
@@ -126,27 +199,19 @@
 
 	var attachIcon = function($element) {
 
-		var parser = document.createElement('a');
-		parser.href = $element.attr('href');
-
-		var company = parser.pathname.split('/')[2];
-		var rq;
+		var parsedElement = parseElement($element);
+		var company = parsedElement.company;
+		var rq = requestCardData(parsedElement.company);
 		var hovercard;
-		var url = endpoint+'company/'+company+'?version='+version;
 
-		$element.attr('target', '_blank').attr('href', parser.href + '?utm_source=thenextweb.com&utm_medium=referral&utm_campaign=hover-'+company);
+		$element.attr('target', '_blank').attr('href', parsedElement.href + '?utm_source=thenextweb.com&utm_medium=referral&utm_campaign=hover-'+company);
 			$element.on('mouseover',function(ev){
 				if(!$element.data(prefix+'hasIndexPopover') === true) {
 					$element.data(prefix+'hasIndexPopover',true);
-					rq = $.ajax({
-						dataType: "json",
-						type: 'GET',
-						url: url
-					});
 					rq.done(function(data){
 						try {
 							hovercard = new Hovercard({
-								html: makeHoverCardHtml(data),
+								html: makeCardHtml(data),
 								top: $element.offset().top,
 								left: $element.offset().left + ($element.outerWidth() / 2)
 							});
@@ -156,11 +221,6 @@
 							hovercard.place();
 						} catch(error){
 							console.error('[index hovercards] parsing error ('+error+') loading hovercard for "'+company+'" at endpoint "'+url+'"');
-						}
-					})
-					rq.fail(function(xhr,error){
-						if(error !== 'abort'){
-							console.error('[index hovercards] http error ('+error+') loading hovercard for "'+company+'" at endpoint "'+url+'"');
 						}
 					})
 				}
