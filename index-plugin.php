@@ -15,6 +15,5 @@ include 'filter/filter.php';
 include 'filter/shortcode.php';
 
 add_action( 'wp_enqueue_scripts', function(){
-    wp_enqueue_script('index', plugins_url('assets/indexco.js', __FILE__), ['jquery']);
-    wp_enqueue_style('index',plugins_url('assets/index.css', __FILE__));
+    wp_enqueue_script('index', plugins_url('assets/indexdotco.js', __FILE__), ['jquery']);
 });
